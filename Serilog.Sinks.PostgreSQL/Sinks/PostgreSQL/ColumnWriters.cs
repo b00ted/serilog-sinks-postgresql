@@ -169,14 +169,19 @@ namespace Serilog.Sinks.PostgreSQL
             return LogEventToJson(logEvent, formatProvider);
         }
 
-        private object LogEventToJson(LogEvent logEvent, IFormatProvider formatProvider)
+        private string LogEventToJson(LogEvent logEvent, IFormatProvider formatProvider)
         {
-            var jsonFormatter = new JsonFormatter(formatProvider: formatProvider);
-
-            var sb = new StringBuilder();
-            using (var writer = new System.IO.StringWriter(sb))
-                jsonFormatter.Format(logEvent, writer);
-            return sb.ToString();
+            var formatter = new JsonFormatter(null, false, formatProvider);
+            var builder = new StringBuilder();
+            using (var stringWriter = new StringWriter(builder))
+            {
+                formatter.Format(logEvent, stringWriter);
+            } 
+                
+            // Remove \u0000 => not supported by Postgres
+            // gives JSON parsing errors when applying operations in the database
+            // like properties->'Timestamp' 
+            return builder.ToString().Replace("\\u0000", "");
         }
     }
 
