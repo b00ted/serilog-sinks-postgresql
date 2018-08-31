@@ -7,26 +7,25 @@ using NpgsqlTypes;
 
 namespace Serilog.Sinks.PostgreSQL
 {
-    public class TableCreator
+    public static class TableCreator
     {
         public static int DefaultCharColumnsLength = 50;
         public static int DefaultVarcharColumnsLength = 50;
         public static int DefaultBitColumnsLength = 8;
 
-        public static void CreateTable(NpgsqlConnection connection, string tableName, IDictionary<string, ColumnWriterBase> columnsInfo)
+        public static void CreateTable(NpgsqlConnection connection, string schemaName, string tableName, IDictionary<string, ColumnWriterBase> columnsInfo)
         {
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = GetCreateTableQuery(tableName, columnsInfo);
+                command.CommandText = GetCreateTableQuery(schemaName, tableName, columnsInfo);
                 command.ExecuteNonQuery();
             }
         }
 
-
-        private static string GetCreateTableQuery(string tableName, IDictionary<string, ColumnWriterBase> columnsInfo)
+        private static string GetCreateTableQuery(string schemaName, string tableName, IDictionary<string, ColumnWriterBase> columnsInfo)
         {
             var builder = new StringBuilder("CREATE TABLE IF NOT EXISTS ");
-            builder.Append(tableName);
+            builder.Append($"{GetSchemaPrefix(schemaName)}{tableName}");
             builder.AppendLine(" (");
 
             builder.AppendLine(String.Join(",\n", columnsInfo.Select(r => $" {r.Key} {GetSqlTypeStr(r.Value.DbType)} ")));
@@ -35,6 +34,8 @@ namespace Serilog.Sinks.PostgreSQL
 
             return builder.ToString();
         }
+
+        private static string GetSchemaPrefix(string schemaName) => !string.IsNullOrEmpty(schemaName) ? $"{schemaName}." : string.Empty;
 
         private static string GetSqlTypeStr(NpgsqlDbType dbType)
         {

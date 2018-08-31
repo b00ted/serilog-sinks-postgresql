@@ -81,7 +81,7 @@ namespace Serilog.Sinks.PostgreSQL
 
                 if (!_isTableCreated)
                 {
-                    TableCreator.CreateTable(connection, _tableName, _columnOptions);
+                    TableCreator.CreateTable(connection, _schemaName, _tableName, _columnOptions);
                     _isTableCreated = true;
                 }
 
