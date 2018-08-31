@@ -15,6 +15,7 @@ namespace Serilog.Sinks.PostgreSQL
         private readonly IDictionary<string, ColumnWriterBase> _columnOptions;
         private readonly IFormatProvider _formatProvider;
         private readonly bool _useCopy;
+        private readonly bool _respectCase;
 
         private readonly string _schemaName;
 
@@ -32,7 +33,8 @@ namespace Serilog.Sinks.PostgreSQL
             int batchSizeLimit = DefaultBatchSizeLimit,
             bool useCopy = true,
             string schemaName = "",
-            bool needAutoCreateTable = false) : base(batchSizeLimit, period)
+            bool needAutoCreateTable = false,
+            bool respectCase = false) : base(batchSizeLimit, period)
         {
             _connectionString = connectionString;
             _tableName = tableName;
@@ -41,6 +43,7 @@ namespace Serilog.Sinks.PostgreSQL
 
             _formatProvider = formatProvider;
             _useCopy = useCopy;
+            _respectCase = respectCase;
 
             _columnOptions = columnOptions ?? ColumnOptions.Default;
 
@@ -57,7 +60,8 @@ namespace Serilog.Sinks.PostgreSQL
             int queueLimit = DefaultQueueLimit,
             bool useCopy = true,
             string schemaName = "",
-            bool needAutoCreateTable = false) : base(batchSizeLimit, period, queueLimit)
+            bool needAutoCreateTable = false,
+            bool respectCase = false) : base(batchSizeLimit, period, queueLimit)
         {
             _connectionString = connectionString;
             _tableName = tableName;
@@ -66,6 +70,7 @@ namespace Serilog.Sinks.PostgreSQL
 
             _formatProvider = formatProvider;
             _useCopy = useCopy;
+            _respectCase = respectCase;
 
             _columnOptions = columnOptions ?? ColumnOptions.Default;
 
@@ -81,7 +86,7 @@ namespace Serilog.Sinks.PostgreSQL
 
                 if (!_isTableCreated)
                 {
-                    TableCreator.CreateTable(connection, _tableName, _columnOptions);
+                    TableCreator.CreateTable(connection, _tableName, _columnOptions, _respectCase);
                     _isTableCreated = true;
                 }
 
@@ -135,23 +140,40 @@ namespace Serilog.Sinks.PostgreSQL
         private string GetCopyCommand()
         {
             string schemaPrefix = GetSchemaPrefix();
+            
+            if (_respectCase)
+            {
+                var columns = String.Join(", ", _columnOptions.Keys.Select(k => $"\"{k}\""));
 
-            var columns = String.Join(", ", _columnOptions.Keys);
+                return $"COPY {schemaPrefix}\"{_tableName}\"({columns}) FROM STDIN BINARY;";
+            }
+            else
+            {
+                var columns = String.Join(", ", _columnOptions.Keys);
 
-            return $"COPY {schemaPrefix}{_tableName}({columns}) FROM STDIN BINARY;";
-
+                return $"COPY {schemaPrefix}{_tableName}({columns}) FROM STDIN BINARY;";
+            }
         }
 
         private string GetInsertQuery()
         {
             string schemaPrefix = GetSchemaPrefix();
 
-            var columns = String.Join(", ", _columnOptions.Keys);
-
             var parameters = String.Join(", ", _columnOptions.Keys.Select(cn => ":" + ClearColumnNameForParameterName(cn)));
+            
+            if (_respectCase)
+            {
+                var columns = String.Join(", ", _columnOptions.Keys.Select(k => $"\"{k}\""));
 
-            return $@"INSERT INTO {schemaPrefix}{_tableName} ({columns})
-                                        VALUES ({parameters})";
+                return $"INSERT INTO {schemaPrefix}\"{ _tableName}\" ({columns}) VALUES ({parameters})";
+            }
+            else
+            {
+                var columns = String.Join(", ", _columnOptions.Keys);
+
+                return $"INSERT INTO {schemaPrefix}{_tableName} ({columns}) VALUES ({parameters})";
+            }
+
         }
 
         private string GetSchemaPrefix()

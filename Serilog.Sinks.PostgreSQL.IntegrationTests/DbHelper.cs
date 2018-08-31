@@ -11,14 +11,16 @@ namespace Serilog.Sinks.PostgreSQL.IntegrationTests
             _connectionString = connectionString;
         }
 
-        public void RemoveTable(string tableName)
+        public void RemoveTable(string tableName, bool respectCase = false)
         {
             using (var conn = new NpgsqlConnection(_connectionString))
             {
                 conn.Open();
                 using (var command = conn.CreateCommand())
                 {
-                    command.CommandText = $"DROP TABLE IF EXISTS {tableName}";
+                    command.CommandText = respectCase
+                        ? $"DROP TABLE IF EXISTS \"{tableName}\""
+                        : $"DROP TABLE IF EXISTS {tableName}";
 
                     command.ExecuteNonQuery();
                 }
@@ -39,10 +41,11 @@ namespace Serilog.Sinks.PostgreSQL.IntegrationTests
             }
         }
 
-        public long GetTableRowsCount(string tableName)
+        public long GetTableRowsCount(string tableName, bool respectCase = false)
         {
-            var sql = $@"SELECT count(*)
-                         FROM {tableName}";
+            var sql = respectCase
+                ? $"SELECT count(*) FROM \"{tableName}\""
+                : $"SELECT count(*) FROM {tableName}";
 
             using (var conn = new NpgsqlConnection(_connectionString))
             {

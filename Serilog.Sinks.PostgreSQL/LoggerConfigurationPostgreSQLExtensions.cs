@@ -29,6 +29,7 @@ namespace Serilog
         /// <param name="useCopy">If true inserts data via COPY command, otherwise uses INSERT INTO satement </param>
         /// <param name="schemaName">Schema name</param>
         /// <param name="needAutoCreateTable">Set if sink should create table</param>
+        /// <param name="respectCase">When needAutoCreateTable is true, indicates whether the table name and the column names respect the case.</param>
         /// <returns>Logger configuration, allowing configuration to continue.</returns>
         public static LoggerConfiguration PostgreSQL(this LoggerSinkConfiguration sinkConfiguration,
             string connectionString,
@@ -41,7 +42,8 @@ namespace Serilog
             LoggingLevelSwitch levelSwitch = null,
             bool useCopy = true,
             string schemaName = "",
-            bool needAutoCreateTable = false)
+            bool needAutoCreateTable = false,
+            bool respectCase = false)
         {
             if (sinkConfiguration == null)
             {
@@ -59,7 +61,8 @@ namespace Serilog
                                                                 batchSizeLimit,
                                                                 useCopy,
                                                                 schemaName,
-                                                                needAutoCreateTable), restrictedToMinimumLevel, levelSwitch);
+                                                                needAutoCreateTable,
+                                                                respectCase), restrictedToMinimumLevel, levelSwitch);
         }
 
     }
