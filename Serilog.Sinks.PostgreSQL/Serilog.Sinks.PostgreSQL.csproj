@@ -10,11 +10,12 @@
     <PackageProjectUrl>https://github.com/b00ted/serilog-sinks-postgresql</PackageProjectUrl>
     <RepositoryUrl></RepositoryUrl>
     <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
-    <AssemblyVersion>2.0.0.0</AssemblyVersion>
-    <FileVersion>2.0.0.0</FileVersion>
-    <Version>2.0.0</Version>
+    <AssemblyVersion>2.0.1.0</AssemblyVersion>
+    <FileVersion>2.0.1.0</FileVersion>
+    <Version>2.0.1</Version>
     <PackageTags>serilog postgresql</PackageTags>
-    <PackageReleaseNotes>Moved to npgsql 4</PackageReleaseNotes>
+    <PackageReleaseNotes>Fixed: writing single property values of scalar types
+Fixed: consider schema parameter when auto creating table</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
