@@ -44,3 +44,6 @@ TableCreator.DefaultCharColumnsLength = 30;
 //Sets size of all VARCHAR columns to 50
 TableCreator.DefaultVarcharColumnsLength = 50;
 ```
+
+##### Mixed case table or column names
+If your schema, table or column names is in mixed case, you should set parameter `respectCase` to `true`.
