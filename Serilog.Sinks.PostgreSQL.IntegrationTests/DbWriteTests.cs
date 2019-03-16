@@ -191,5 +191,48 @@ namespace Serilog.Sinks.PostgreSQL.IntegrationTests
 
             Assert.Equal(rowsCount, actualRowsCount);
         }
+
+
+        [Fact]
+        public void ColumnsAndTableWithDifferentCaseName_ShouldCreateTableAndIsertEvents()
+        {
+            var tableName = "LogsAutoCreated";
+            var quotedTableName = $"\"{tableName}\"";
+            _dbHelper.RemoveTable(quotedTableName);
+
+            var testObject = new TestObjectType1 { IntProp = 42, StringProp = "Test" };
+
+            var testObj2 = new TestObjectType2 { DateProp1 = DateTime.Now, NestedProp = testObject };
+
+            var columnProps = new Dictionary<string, ColumnWriterBase>
+            {
+                {"Message", new RenderedMessageColumnWriter() },
+                {"MessageTemplate", new MessageTemplateColumnWriter() },
+                {"Level", new LevelColumnWriter(true, NpgsqlDbType.Varchar) },
+                {"RaiseDate", new TimestampColumnWriter() },
+                {"\"Exception\"", new ExceptionColumnWriter() },
+                {"Properties", new LogEventSerializedColumnWriter() },
+                {"PropsTest", new PropertiesColumnWriter(NpgsqlDbType.Text) },
+                {"IntPropTest", new SinglePropertyColumnWriter("testNo", PropertyWriteMethod.Raw, NpgsqlDbType.Integer) },
+                {"MachineName", new SinglePropertyColumnWriter("MachineName", format: "l") }
+            };
+
+            var logger =
+                new LoggerConfiguration().WriteTo.PostgreSQL(_connectionString, tableName, columnProps, needAutoCreateTable: true, respectCase: true)
+                    .Enrich.WithMachineName()
+                    .CreateLogger();
+
+            int rowsCount = 50;
+            for (int i = 0; i < rowsCount; i++)
+            {
+                logger.Information("Test{testNo}: {@testObject} test2: {@testObj2} testStr: {@testStr:l}", i, testObject, testObj2, "stringValue");
+            }
+
+            logger.Dispose();
+
+            var actualRowsCount = _dbHelper.GetTableRowsCount(quotedTableName);
+
+            Assert.Equal(rowsCount, actualRowsCount);
+        }
     }
 }

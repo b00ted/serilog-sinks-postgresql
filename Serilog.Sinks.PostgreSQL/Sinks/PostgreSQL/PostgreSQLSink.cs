@@ -30,16 +30,27 @@ namespace Serilog.Sinks.PostgreSQL
             int batchSizeLimit = DefaultBatchSizeLimit,
             bool useCopy = true,
             string schemaName = "",
-            bool needAutoCreateTable = false) : base(batchSizeLimit, period)
+            bool needAutoCreateTable = false,
+            bool respectCase = false) : base(batchSizeLimit, period)
         {
             _connectionString = connectionString;
 
+            if (respectCase)
+            {
+                schemaName = QuoteIdentifier(schemaName);
+                tableName = QuoteIdentifier(tableName);
+            }
             _fullTableName = GetFullTableName(tableName, schemaName);
 
             _formatProvider = formatProvider;
             _useCopy = useCopy;
 
             _columnOptions = columnOptions ?? ColumnOptions.Default;
+            if (respectCase)
+            {
+                _columnOptions = CreateQuotedColumnsDict(_columnOptions);
+            }
+
 
             _isTableCreated = !needAutoCreateTable;
         }
@@ -53,18 +64,51 @@ namespace Serilog.Sinks.PostgreSQL
             int queueLimit = DefaultQueueLimit,
             bool useCopy = true,
             string schemaName = "",
-            bool needAutoCreateTable = false) : base(batchSizeLimit, period, queueLimit)
+            bool needAutoCreateTable = false,
+            bool respectCase = false) : base(batchSizeLimit, period, queueLimit)
         {
             _connectionString = connectionString;
 
+            if (respectCase)
+            {
+                schemaName = QuoteIdentifier(schemaName);
+                tableName = QuoteIdentifier(tableName);
+            }
             _fullTableName = GetFullTableName(tableName, schemaName);
 
             _formatProvider = formatProvider;
             _useCopy = useCopy;
 
             _columnOptions = columnOptions ?? ColumnOptions.Default;
+            if (respectCase)
+            {
+                _columnOptions = CreateQuotedColumnsDict(_columnOptions);
+            }
+
 
             _isTableCreated = !needAutoCreateTable;
+        }
+
+        private static string QuoteIdentifier(string identifier)
+        {
+            if (String.IsNullOrEmpty(identifier) || identifier.StartsWith("\""))
+            {
+                return identifier;
+            }
+
+            return $"\"{identifier}\"";
+        }
+
+        private IDictionary<string, ColumnWriterBase> CreateQuotedColumnsDict(IDictionary<string, ColumnWriterBase> originalColumnsDict)
+        {
+            var result = new Dictionary<string, ColumnWriterBase>(originalColumnsDict.Count);
+
+            foreach (var kvp in originalColumnsDict)
+            {
+                result[QuoteIdentifier(kvp.Key)] = kvp.Value;
+            }
+
+            return result;
         }
 
         private string GetFullTableName(string tableName, string schemaName)

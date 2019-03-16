@@ -10,12 +10,11 @@
     <PackageProjectUrl>https://github.com/b00ted/serilog-sinks-postgresql</PackageProjectUrl>
     <RepositoryUrl></RepositoryUrl>
     <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
-    <AssemblyVersion>2.0.1.0</AssemblyVersion>
-    <FileVersion>2.0.1.0</FileVersion>
-    <Version>2.0.1</Version>
+    <AssemblyVersion>2.1.0.0</AssemblyVersion>
+    <FileVersion>2.1.0.0</FileVersion>
+    <Version>2.1.0</Version>
     <PackageTags>serilog postgresql</PackageTags>
-    <PackageReleaseNotes>Fixed: writing single property values of scalar types
-Fixed: consider schema parameter when auto creating table</PackageReleaseNotes>
+    <PackageReleaseNotes>Added mixed case table and column names support</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
