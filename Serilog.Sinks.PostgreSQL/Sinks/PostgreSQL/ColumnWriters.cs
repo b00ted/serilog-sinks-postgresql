@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using NpgsqlTypes;
 using Serilog.Events;
@@ -121,8 +123,11 @@ namespace Serilog.Sinks.PostgreSQL
     /// </summary>
     public class PropertiesColumnWriter : ColumnWriterBase
     {
-        public PropertiesColumnWriter(NpgsqlDbType dbType = NpgsqlDbType.Jsonb) : base(dbType)
+        private readonly ICollection<string> _exclude;
+
+        public PropertiesColumnWriter(NpgsqlDbType dbType = NpgsqlDbType.Jsonb, ICollection<string> exclude = null) : base(dbType)
         {
+            _exclude = exclude;
         }
 
         public override object GetValue(LogEvent logEvent, IFormatProvider formatProvider = null)
@@ -143,17 +148,30 @@ namespace Serilog.Sinks.PostgreSQL
 
             using (var writer = new System.IO.StringWriter(sb))
             {
-                foreach (var logEventProperty in logEvent.Properties)
+                var propertiesToWrite = (IEnumerable<KeyValuePair<string, LogEventPropertyValue>>)logEvent.Properties;
+
+                if (_exclude != null)
                 {
+                    propertiesToWrite = propertiesToWrite.Where(x => !_exclude.Contains(x.Key));
+                }
+
+                var isFirst = true;
+
+                foreach (var logEventProperty in propertiesToWrite)
+                {
+                    if (!isFirst)
+                    {
+                        sb.Append(", ");
+                    }
+
                     sb.Append($"\"{logEventProperty.Key}\":");
 
                     valuesFormatter.Format(logEventProperty.Value, writer);
 
-                    sb.Append(", ");
+                    isFirst = false;
                 }
             }
 
-            sb.Remove(sb.Length - 2, 2);
             sb.Append("}");
 
             return sb.ToString();
