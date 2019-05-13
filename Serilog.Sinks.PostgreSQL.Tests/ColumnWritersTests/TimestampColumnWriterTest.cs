@@ -10,7 +10,7 @@ namespace Serilog.Sinks.PostgreSQL.Tests
     public class TimestampColumnWriterTest
     {
         [Fact]
-        public void ByDefault_ShouldReturnTimestampValueWithoutTimezone()
+        public void ByDefault_ShouldReturnTimestampValueWithTimezone()
         {
             var writer = new TimestampColumnWriter();
 
@@ -20,7 +20,7 @@ namespace Serilog.Sinks.PostgreSQL.Tests
 
             var result = writer.GetValue(testEvent);
 
-            Assert.Equal(timeStamp.DateTime, result);
+            Assert.Equal(timeStamp, result);
         }
 
         [Fact]
