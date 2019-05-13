@@ -11,7 +11,7 @@ namespace Serilog.Sinks.PostgreSQL
         /// <summary>
         /// Column type
         /// </summary>
-        public NpgsqlDbType DbType { get; }
+        public NpgsqlDbType DbType { get; set;}
 
         protected ColumnWriterBase(NpgsqlDbType dbType)
         {
@@ -33,17 +33,13 @@ namespace Serilog.Sinks.PostgreSQL
     /// </summary>
     public class TimestampColumnWriter : ColumnWriterBase
     {
-        public TimestampColumnWriter(NpgsqlDbType dbType = NpgsqlDbType.Timestamp) : base(dbType)
+        public TimestampColumnWriter(NpgsqlDbType dbType = NpgsqlDbType.TimestampTz) : base(dbType)
         {
+            this.DbType = NpgsqlDbType.TimestampTz;
         }
 
         public override object GetValue(LogEvent logEvent, IFormatProvider formatProvider = null)
         {
-            if (DbType == NpgsqlDbType.Timestamp)
-            {
-                return logEvent.Timestamp.DateTime;
-            }
-
             return logEvent.Timestamp;
         }
     }
