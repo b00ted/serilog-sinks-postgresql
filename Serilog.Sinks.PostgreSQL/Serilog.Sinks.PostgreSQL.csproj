@@ -8,13 +8,15 @@
     <Company />
     <Description>Serilog sink for writing to PostgreSQL table</Description>
     <PackageProjectUrl>https://github.com/b00ted/serilog-sinks-postgresql</PackageProjectUrl>
-    <RepositoryUrl></RepositoryUrl>
-    <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
-    <AssemblyVersion>2.1.0.0</AssemblyVersion>
-    <FileVersion>2.1.0.0</FileVersion>
-    <Version>2.1.0</Version>
+    <RepositoryUrl>https://github.com/b00ted/serilog-sinks-postgresql</RepositoryUrl>
+    <PackageLicenseUrl></PackageLicenseUrl>
+    <AssemblyVersion>2.2.0.0</AssemblyVersion>
+    <FileVersion>2.2.0.0</FileVersion>
+    <Version>2.2.0</Version>
     <PackageTags>serilog postgresql</PackageTags>
-    <PackageReleaseNotes>Added mixed case table and column names support</PackageReleaseNotes>
+    <PackageReleaseNotes>Added ability to set length of individual column</PackageReleaseNotes>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
@@ -29,6 +31,13 @@
     <PackageReference Include="Npgsql" Version="4.0.2" />
     <PackageReference Include="Serilog" Version="2.7.1" />
     <PackageReference Include="Serilog.Sinks.PeriodicBatching" Version="2.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
