@@ -26,7 +26,7 @@ namespace Serilog.Sinks.PostgreSQL.Tests
         [Fact]
         public void DbTypeWithTimezoneSelected_ShouldReturnTimestampValue()
         {
-            var writer = new TimestampColumnWriter(NpgsqlDbType.TimestampTZ);
+            var writer = new TimestampColumnWriter(NpgsqlDbType.TimestampTz);
 
             var timeStamp = new DateTimeOffset(2017, 8, 13, 11, 11, 11, new TimeSpan());
 

@@ -70,11 +70,11 @@ namespace Serilog.Sinks.PostgreSQL
                     return "time";
                 case NpgsqlDbType.Timestamp:
                     return "timestamp";
-                case NpgsqlDbType.TimestampTZ:
+                case NpgsqlDbType.TimestampTz:
                     return "timestamp with time zone";
                 case NpgsqlDbType.Interval:
                     return "interval";
-                case NpgsqlDbType.TimeTZ:
+                case NpgsqlDbType.TimeTz:
                     return "time with time zone";
                 case NpgsqlDbType.Inet:
                     return "inet";
