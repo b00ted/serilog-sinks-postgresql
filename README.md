@@ -45,5 +45,11 @@ TableCreator.DefaultCharColumnsLength = 30;
 TableCreator.DefaultVarcharColumnsLength = 50;
 ```
 
+or set column size individually by providing `columnLength` parameter to ColumnWriter
+```charp
+int columnLength = 100;
+new LevelColumnWriter(true, NpgsqlDbType.Varchar, columnLength)
+```
+
 ##### Mixed case table or column names
 If your schema, table or column names is in mixed case, you should set parameter `respectCase` to `true`.
