@@ -29,14 +29,14 @@ namespace Serilog.Sinks.PostgreSQL
             builder.Append(tableName);
             builder.AppendLine(" (");
 
-            builder.AppendLine(String.Join(",\n", columnsInfo.Select(r => $" {r.Key} {GetSqlTypeStr(r.Value.DbType)} ")));
+            builder.AppendLine(String.Join(",\n", columnsInfo.Select(r => $" {r.Key} {GetSqlTypeStr(r.Value.DbType, r.Value.ColumnLength)} ")));
 
             builder.AppendLine(")");
 
             return builder.ToString();
         }
 
-        private static string GetSqlTypeStr(NpgsqlDbType dbType)
+        private static string GetSqlTypeStr(NpgsqlDbType dbType, int? columnLength = null)
         {
             switch (dbType)
             {
@@ -57,11 +57,11 @@ namespace Serilog.Sinks.PostgreSQL
                 case NpgsqlDbType.Money:
                     return "money";
                 case NpgsqlDbType.Char:
-                    return $"character({DefaultCharColumnsLength})";
+                    return $"character({columnLength ?? DefaultCharColumnsLength})";
                 case NpgsqlDbType.Text:
                     return "text";
                 case NpgsqlDbType.Varchar:
-                    return $"character varying({DefaultVarcharColumnsLength})";
+                    return $"character varying({columnLength ?? DefaultVarcharColumnsLength})";
                 case NpgsqlDbType.Bytea:
                     return "bytea";
                 case NpgsqlDbType.Date:
@@ -83,9 +83,9 @@ namespace Serilog.Sinks.PostgreSQL
                 case NpgsqlDbType.MacAddr:
                     return "macaddr";
                 case NpgsqlDbType.Bit:
-                    return $"bit({DefaultBitColumnsLength})";
+                    return $"bit({columnLength ?? DefaultBitColumnsLength})";
                 case NpgsqlDbType.Varbit:
-                    return $"bit varying({DefaultBitColumnsLength})";
+                    return $"bit varying({columnLength ?? DefaultBitColumnsLength})";
                 case NpgsqlDbType.Uuid:
                     return "uuid";
                 case NpgsqlDbType.Xml:

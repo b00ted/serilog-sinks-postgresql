@@ -13,9 +13,13 @@ namespace Serilog.Sinks.PostgreSQL
         /// </summary>
         public NpgsqlDbType DbType { get; }
 
-        protected ColumnWriterBase(NpgsqlDbType dbType)
+        public int? ColumnLength { get; }
+        
+
+        protected ColumnWriterBase(NpgsqlDbType dbType, int? columnLength = null)
         {
             DbType = dbType;
+            ColumnLength = columnLength;
         }
 
         /// <summary>
@@ -53,7 +57,7 @@ namespace Serilog.Sinks.PostgreSQL
     /// </summary>
     public class RenderedMessageColumnWriter : ColumnWriterBase
     {
-        public RenderedMessageColumnWriter(NpgsqlDbType dbType = NpgsqlDbType.Text) : base(dbType)
+        public RenderedMessageColumnWriter(NpgsqlDbType dbType = NpgsqlDbType.Text, int? columnLength = null) : base(dbType, columnLength)
         {
         }
 
@@ -68,7 +72,7 @@ namespace Serilog.Sinks.PostgreSQL
     /// </summary>
     public class MessageTemplateColumnWriter : ColumnWriterBase
     {
-        public MessageTemplateColumnWriter(NpgsqlDbType dbType = NpgsqlDbType.Text) : base(dbType)
+        public MessageTemplateColumnWriter(NpgsqlDbType dbType = NpgsqlDbType.Text, int? columnLength = null) : base(dbType, columnLength)
         {
         }
 
@@ -85,7 +89,7 @@ namespace Serilog.Sinks.PostgreSQL
     {
         private readonly bool _renderAsText;
 
-        public LevelColumnWriter(bool renderAsText = false, NpgsqlDbType dbType = NpgsqlDbType.Integer) : base(dbType)
+        public LevelColumnWriter(bool renderAsText = false, NpgsqlDbType dbType = NpgsqlDbType.Integer, int? columnLength = null) : base(dbType, columnLength)
         {
             _renderAsText = renderAsText;
         }
@@ -106,7 +110,7 @@ namespace Serilog.Sinks.PostgreSQL
     /// </summary>
     public class ExceptionColumnWriter : ColumnWriterBase
     {
-        public ExceptionColumnWriter(NpgsqlDbType dbType = NpgsqlDbType.Text) : base(dbType)
+        public ExceptionColumnWriter(NpgsqlDbType dbType = NpgsqlDbType.Text, int? columnLength = null) : base(dbType, columnLength)
         {
         }
 
@@ -121,7 +125,7 @@ namespace Serilog.Sinks.PostgreSQL
     /// </summary>
     public class PropertiesColumnWriter : ColumnWriterBase
     {
-        public PropertiesColumnWriter(NpgsqlDbType dbType = NpgsqlDbType.Jsonb) : base(dbType)
+        public PropertiesColumnWriter(NpgsqlDbType dbType = NpgsqlDbType.Jsonb, int? columnLength = null) : base(dbType, columnLength)
         {
         }
 
@@ -165,7 +169,7 @@ namespace Serilog.Sinks.PostgreSQL
     /// </summary>
     public class LogEventSerializedColumnWriter : ColumnWriterBase
     {
-        public LogEventSerializedColumnWriter(NpgsqlDbType dbType = NpgsqlDbType.Jsonb) : base(dbType)
+        public LogEventSerializedColumnWriter(NpgsqlDbType dbType = NpgsqlDbType.Jsonb, int? columnLength = null) : base(dbType, columnLength)
         {
         }
 
@@ -195,7 +199,7 @@ namespace Serilog.Sinks.PostgreSQL
         public string Format { get; }
 
         public SinglePropertyColumnWriter(string propertyName, PropertyWriteMethod writeMethod = PropertyWriteMethod.ToString, 
-                                            NpgsqlDbType dbType = NpgsqlDbType.Text, string format = null) : base(dbType)
+                                            NpgsqlDbType dbType = NpgsqlDbType.Text, string format = null, int? columnLength = null) : base(dbType, columnLength)
         {
             Name = propertyName;
             WriteMethod = writeMethod;

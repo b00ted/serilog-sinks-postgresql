@@ -8,7 +8,7 @@ namespace Serilog.Sinks.PostgreSQL.IntegrationTests
 {
     public class DbWriteTests
     {
-        private const string _connectionString = "User ID=serilog;Password=serilog;Host=localhost;Port=5432;Database=serilog_logs";
+        private const string _connectionString = "User ID=serilog;Password=serilog;Host=localhost;Port=55432;Database=serilog_logs";
 
         private const string _tableName = "logs";
 
@@ -233,6 +233,35 @@ namespace Serilog.Sinks.PostgreSQL.IntegrationTests
             var actualRowsCount = _dbHelper.GetTableRowsCount(quotedTableName);
 
             Assert.Equal(rowsCount, actualRowsCount);
+        }
+
+
+        [Fact]
+        public void ColumnWriterWithLengthDefined_ShouldSetColumnLengthOnTableCreation()
+        {
+            var tableName = "table_with_column_length";
+
+            _dbHelper.RemoveTable(tableName);
+
+            var columnName = "level";
+            var columnLength = 100;
+
+            var columnProps = new Dictionary<string, ColumnWriterBase>
+            {
+                {columnName, new LevelColumnWriter(true, NpgsqlDbType.Varchar, columnLength) }
+            };
+
+            var logger =
+                new LoggerConfiguration().WriteTo.PostgreSQL(_connectionString, tableName, columnProps, needAutoCreateTable: true)
+                    .CreateLogger();
+
+            logger.Information("Test message");
+
+            logger.Dispose();
+
+            var actualColumnLength = _dbHelper.GetCharColumnLength(tableName, columnName);
+
+            Assert.Equal(columnLength, actualColumnLength);
         }
     }
 }
