@@ -74,5 +74,23 @@ namespace Serilog.Sinks.PostgreSQL.IntegrationTests
                 }
             }
         }
+
+        public object GetFirstRowValue(string tableName, string columnName)
+        {
+            var sql = $@"SELECT {columnName}
+                              FROM {tableName}
+                              LIMIT 1";
+
+            using (var conn = new NpgsqlConnection(_connectionString))
+            {
+                conn.Open();
+                using (var command = conn.CreateCommand())
+                {
+                    command.CommandText = sql;
+
+                    return command.ExecuteScalar();
+                }
+            }
+        }
     }
 }

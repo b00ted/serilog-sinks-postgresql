@@ -8,7 +8,7 @@ namespace Serilog.Sinks.PostgreSQL.IntegrationTests
 {
     public class DbWriteWithSchemaTests
     {
-        private const string _connectionString = "User ID=serilog;Password=serilog;Host=localhost;Port=5432;Database=serilog_logs";
+        private const string _connectionString = "User ID=serilog;Password=serilog;Host=localhost;Port=55432;Database=serilog_logs";
 
         private const string _tableName = "logs_with_schema";
         private const string _schemaName = "logs";

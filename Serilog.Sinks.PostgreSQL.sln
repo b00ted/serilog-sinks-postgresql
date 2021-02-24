@@ -1,13 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26430.6
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31019.35
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Serilog.Sinks.PostgreSQL", "Serilog.Sinks.PostgreSQL\Serilog.Sinks.PostgreSQL.csproj", "{69627EEF-98B1-4DD5-9B15-269FC99EA24D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Serilog.Sinks.PostgreSQL.Tests", "Serilog.Sinks.PostgreSQL.Tests\Serilog.Sinks.PostgreSQL.Tests.csproj", "{0BABE88C-2115-4CA4-A834-FE1DE6A757EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Serilog.Sinks.PostgreSQL.Tests", "Serilog.Sinks.PostgreSQL.Tests\Serilog.Sinks.PostgreSQL.Tests.csproj", "{0BABE88C-2115-4CA4-A834-FE1DE6A757EF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Serilog.Sinks.PostgreSQL.IntegrationTests", "Serilog.Sinks.PostgreSQL.IntegrationTests\Serilog.Sinks.PostgreSQL.IntegrationTests.csproj", "{0C0B147E-5AC2-4419-8BC5-54299F78E3AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Serilog.Sinks.PostgreSQL.IntegrationTests", "Serilog.Sinks.PostgreSQL.IntegrationTests\Serilog.Sinks.PostgreSQL.IntegrationTests.csproj", "{0C0B147E-5AC2-4419-8BC5-54299F78E3AD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Serilog.Sinks.PostgreSQL.Configuration", "Serilog.Sinks.PostgreSQL.Configuration\Serilog.Sinks.PostgreSQL.Configuration.csproj", "{C28694F5-56B3-4A57-86BD-E95FEE782D31}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Serilog.Sinks.PostgreSQL.Configuration.IntegrationTests", "Serilog.Sinks.PostgreSQL.Configuration.IntegrationTests\Serilog.Sinks.PostgreSQL.Configuration.IntegrationTests.csproj", "{D6795394-82E6-48BB-B06D-31B711BFB229}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,8 +31,19 @@ Global
 		{0C0B147E-5AC2-4419-8BC5-54299F78E3AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C0B147E-5AC2-4419-8BC5-54299F78E3AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C0B147E-5AC2-4419-8BC5-54299F78E3AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C28694F5-56B3-4A57-86BD-E95FEE782D31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C28694F5-56B3-4A57-86BD-E95FEE782D31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C28694F5-56B3-4A57-86BD-E95FEE782D31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C28694F5-56B3-4A57-86BD-E95FEE782D31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6795394-82E6-48BB-B06D-31B711BFB229}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6795394-82E6-48BB-B06D-31B711BFB229}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6795394-82E6-48BB-B06D-31B711BFB229}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6795394-82E6-48BB-B06D-31B711BFB229}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D0B0BBE2-C7BD-4155-B77E-2E3283357BFB}
 	EndGlobalSection
 EndGlobal
