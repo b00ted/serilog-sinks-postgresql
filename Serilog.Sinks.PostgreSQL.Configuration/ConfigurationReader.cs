@@ -151,7 +151,13 @@ namespace Serilog
 
         private List<Assembly> GetAssemblies()
         {
-            var assemblies = new List<Assembly> { typeof(PostgreSQLSink).Assembly, Assembly.GetEntryAssembly() };
+            var assemblies = new List<Assembly> { typeof(PostgreSQLSink).Assembly };
+
+            var entryAssembly = Assembly.GetEntryAssembly();
+            if (entryAssembly != null)
+            {
+                assemblies.Add(entryAssembly);
+            }
 
             return assemblies;
         }
