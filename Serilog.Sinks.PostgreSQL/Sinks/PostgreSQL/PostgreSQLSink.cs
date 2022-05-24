@@ -16,6 +16,7 @@ namespace Serilog.Sinks.PostgreSQL
         private readonly IFormatProvider _formatProvider;
         private readonly bool _useCopy;
 
+        private const string split ="\"";
         public const int DefaultBatchSizeLimit = 30;
         public const int DefaultQueueLimit = Int32.MaxValue;
 
@@ -116,10 +117,10 @@ namespace Serilog.Sinks.PostgreSQL
             var schemaPrefix = String.Empty;
             if (!String.IsNullOrEmpty(schemaName))
             {
-                schemaPrefix = schemaName + ".";
+                schemaPrefix = split + schemaName+ split+".";
             }
 
-            return schemaPrefix + tableName;
+            return schemaPrefix + split + tableName + split;
         }
 
 
@@ -184,7 +185,7 @@ namespace Serilog.Sinks.PostgreSQL
 
         private string GetCopyCommand()
         {
-            var columns = String.Join(", ", _columnOptions.Keys);
+            var columns = split+String.Join($"{split},{split}", _columnOptions.Keys)+ split;
 
             return $"COPY {_fullTableName}({columns}) FROM STDIN BINARY;";
 
@@ -192,7 +193,7 @@ namespace Serilog.Sinks.PostgreSQL
 
         private string GetInsertQuery()
         {
-            var columns = String.Join(", ", _columnOptions.Keys);
+            var columns = $"{split}{String.Join($"{split}, {split}", _columnOptions.Keys)}{split}";
 
             var parameters = String.Join(", ", _columnOptions.Keys.Select(cn => ":" + ClearColumnNameForParameterName(cn)));
 
