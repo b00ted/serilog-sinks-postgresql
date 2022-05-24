@@ -25,11 +25,12 @@ namespace Serilog.Sinks.PostgreSQL
 
         private static string GetCreateTableQuery(string tableName, IDictionary<string, ColumnWriterBase> columnsInfo)
         {
+            var split = "\"";
             var builder = new StringBuilder("CREATE TABLE IF NOT EXISTS ");
             builder.Append(tableName);
             builder.AppendLine(" (");
 
-            builder.AppendLine(String.Join(",\n", columnsInfo.Select(r => $" {r.Key} {GetSqlTypeStr(r.Value.DbType, r.Value.ColumnLength)} ")));
+            builder.AppendLine(String.Join(",\n", columnsInfo.Select(r => $" {split}{r.Key}{split} {GetSqlTypeStr(r.Value.DbType, r.Value.ColumnLength)} ")));
 
             builder.AppendLine(")");
 
